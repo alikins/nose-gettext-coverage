@@ -1,0 +1,23 @@
+A plugin for python-nose to check coverage of translated strings.
+
+
+The basic idea is this keeps track of gettext calls, and checks
+to see how many of the known translated strings are accessed
+during the tests cases.
+
+Example usage:
+
+nosetests --with-gettext-cover --gettext-cover-pot-file po/keys.pot -v -d -s
+.....
+gettext coverage: %32.23 total msgs: 422 total covered: 136
+
+
+Requirements: polib from http://pypi.python.org/pypi/polib
+
+TODO:
+- lots
+- at the moment, this kind of breaks gettext (always
+  returns the msgids instead of the translated entries).
+- more detailed reporting
+- only tested with nosetest v0.11.3
+
