@@ -40,11 +40,10 @@ class GettextCoverageData():
             raise IOError("%s could not be read" % potfile)
 
     # "pprint" support for default dict, fake it
-    def __str__(self):
-        buf = "{"
+    def details(self):
+        buf = ""
         for key in self.msg_ids:
-            buf = buf + "\t\"%s\" : %s,\n" % (key, self.msg_ids[key])
-        buf = buf + "}\n"
+            buf = buf + "\"%s\" : %s,\n" % (key, self.msg_ids[key])
         return buf
 
     def report(self):
@@ -65,7 +64,7 @@ class GettextCoverageData():
         if total_true:
             coverage = float(total_true) / float(num_msgs)
 
-        return "gettext coverage: %%%2.2f total msgs: %s total covered: %s\n" % (coverage * 100, num_msgs, total_true)
+        return "gettext coverage: %2.2f%% total msgs: %s msgs covered: %s\n" % (coverage * 100, num_msgs, total_true)
 
 
 class GettextCoverage(Plugin):
@@ -83,10 +82,16 @@ class GettextCoverage(Plugin):
                           default="po/keys.pot",
                           dest="cover_pot_file",
                           help="pot file containing gettext msgs")
+        parser.add_option("--gettext-cover-details", action="store_true",
+                           default=False,
+                           dest="cover_details",
+                           help="show coverage stats for all strings")
 
     def configure(self, options, config):
         Plugin.configure(self, options, config)
         self.pot_file = options.cover_pot_file
+
+        self.cover_details = options.cover_details
 
     def begin(self):
         self.gtc = GettextCoverageData(potfile=self.pot_file)
@@ -97,4 +102,6 @@ class GettextCoverage(Plugin):
         gettext.lgettext = self.gtc.gettext
 
     def report(self, stream):
+        if self.cover_details:
+            stream.writeln(self.gtc.details())
         stream.writeln(self.gtc.report())
