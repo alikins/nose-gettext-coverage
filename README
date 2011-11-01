@@ -9,7 +9,7 @@ Example usage:
 
 nosetests --with-gettext-cover --gettext-cover-pot-file po/keys.pot -v -d -s
 .....
-gettext coverage: %32.23 total msgs: 422 total covered: 136
+gettext coverage: 32.23% total msgs: 422 msgs covered: 136
 
 
 Requirements: polib from http://pypi.python.org/pypi/polib
